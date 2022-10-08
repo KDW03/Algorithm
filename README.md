@@ -5,5 +5,3 @@
 📌 Baekjoon
 https://www.acmicpc.net/
 
-✔ Greedy
-
