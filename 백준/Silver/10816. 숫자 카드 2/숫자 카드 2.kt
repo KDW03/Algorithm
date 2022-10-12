@@ -1,7 +1,7 @@
 fun main() {
     val br = System.`in`.bufferedReader()
     val n = br.readLine().toInt()
-    val ownCard  = br.readLine().split(' ').map { it.toInt() }.sorted()
+    val ownCard  = br.readLine().split(' ').map { it.toInt() }
     val m = br.readLine().toInt()
     val findCard = br.readLine().split(' ').map { it.toInt() }
     val sb = StringBuilder()
