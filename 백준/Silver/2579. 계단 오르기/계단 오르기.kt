@@ -4,7 +4,6 @@ lateinit var dp: Array<Array<Int>>
 fun main() {
     val br = System.`in`.bufferedReader()
     val n = br.readLine().toInt()
-    // 1칸 이동 2칸 이동 값 담기
     val arr = IntArray(n + 1)
     dp = Array(n + 1) { Array(2) { -1 } }
     for (i in 1 until n + 1) {
