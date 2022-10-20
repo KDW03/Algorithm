@@ -11,10 +11,9 @@ fun main() {
     while (q.size != 1){
         val temp = q.poll()
         if (count == k) {
-            sb.append(temp).append(", ")
+            sb.append("${temp}, ")
             count = 1
-        }
-        else {
+        } else {
             count++
             q.add(temp)
         }
