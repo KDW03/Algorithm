@@ -1,14 +1,15 @@
 import kotlin.math.sqrt
-
 lateinit var arr : BooleanArray
 
 fun main() {
     val br = System.`in`.bufferedReader()
+    val sb = StringBuilder()
     val (m,n) = br.readLine().split(' ').map { it.toInt() }
     createDecimalTable(n)
     for (i in m .. n){
-        if (arr[i]) println(i)
+        if (arr[i]) sb.append(i).append("\n")
     }
+    print(sb.toString())
 }
 
 fun isDecimal(number: Int): Boolean {
@@ -29,3 +30,5 @@ fun createDecimalTable(m : Int) {
         }
     }
 }
+
+
