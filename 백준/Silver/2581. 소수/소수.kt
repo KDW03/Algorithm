@@ -9,16 +9,24 @@ fun main() {
     if (n == 1){
         print(-1)
     }else{
-        val answerArr = ArrayList<Int>()
         createDecimalTable(n)
+        var flag = true
+        var sum = 0
+        var min = 0
         for (i in m .. n){
-            if (arr[i]) answerArr.add(i)
+            if (arr[i]) {
+                if (flag){
+                    min = i
+                    flag = false
+                }
+                sum += i
+            }
         }
-        if (answerArr.size == 0){
+        if (flag){
             println(-1)
         }else{
-            println(answerArr.sum())
-            println(answerArr[0])
+            println(sum)
+            println(min)
         }
     }
 }
@@ -41,5 +49,3 @@ fun createDecimalTable(n : Int) {
         }
     }
 }
-
-
