@@ -18,7 +18,7 @@ class Solution {
     }
     
     fun dkStra(graph : Array<ArrayList<Int>>, dkTable : IntArray, start : Int){
-        val q : Queue<Int> = LinkedList()
+        val q = PriorityQueue<Int>()
         q.add(start)
         dkTable[start] = 0
         while(q.isNotEmpty()){         
