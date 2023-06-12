@@ -1,3 +1,4 @@
+
 class Solution {
     fun solution(n: Int, wires: Array<IntArray>): Int {
         val size = wires.size
@@ -13,13 +14,13 @@ class Solution {
                 graph[b].add(a)
             }
             dfs(graph,1,visited)
-         
+
             min = minOf(min,Math.abs(n - visited.count{ it == true } - visited.count{it == true} ))
-         
+
         }
         return min
     }
-    
+
     fun dfs(graph : Array<ArrayList<Int>>,start: Int, visited : BooleanArray){
         visited[start] = true
         for(i in graph[start]){
@@ -27,7 +28,7 @@ class Solution {
             dfs(graph,i,visited)
         }
     }
-    
+
     // 하나씩 끊고 dfs 반복
     // 방문된 거 
     // 방문안 된 거 차이
