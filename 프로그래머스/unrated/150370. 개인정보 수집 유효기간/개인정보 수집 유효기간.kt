@@ -1,43 +1,53 @@
-import java.time.LocalDate
+class Solution {
+    lateinit var todayDate: Date
 
-data class Date(var year: Int, var month: Int, var day: Int) {
-    fun refreshDate(addMonth: Int): Date {
-        var sum = month + addMonth
-        if (sum > 12) {
-            this.year += sum /12
-            sum %= 12
+    fun solution(today: String, terms: Array<String>, privacies: Array<String>): IntArray {
+        todayDate = toDate(today)
+
+        val tMap: HashMap<String, Date> = HashMap()
+
+        terms.forEach {
+            it.split(" ").let { t ->
+                val term = t[1].toInt()
+                val str = "${term / 12}.${term % 12}.${0}"
+                tMap[t[0]] = toDate(str)
+            }
         }
-        this.month = sum
-        if (this.month == 0) {
-            this.month = 12
-            this.year--
-        }
-        return this
+
+        return privacies.mapIndexedNotNull { index, s ->
+            s.split(" ").let { t ->
+                val tmp = toDate(t[0])
+                tmp.addDate(tMap[t[1]]!!)
+                if (isBigThanToday(tmp)) index + 1 else null
+            }
+        }.toIntArray()
     }
-
-    fun compare(date: Date): Boolean = LocalDate.of(year, month, day) <= LocalDate.of(date.year, date.month, date.day)
+    private fun isBigThanToday(endDate: Date): Boolean = todayDate.isBig(endDate)
 }
 
-class Solution {
-    fun solution(today: String, terms: Array<String>, privacies: Array<String>): IntArray {
-        val answer: MutableList<Int> = mutableListOf()
-        val map: Map<String, Int> = terms.associate { val str = it.split(" "); str[0] to str[1].toInt() }
-        val todayDate = today.toDate()
-        var num = 1
-        for (pri in privacies) {
-            val tmp = pri.split(" ")
-            val date = tmp[0]
-            val addMonth = map[tmp[1]]
-            if (addMonth != null){
-                if (date.toDate().refreshDate(addMonth).compare(todayDate)) answer.add(num)
-            }
-            num++
-        }
-        return answer.toIntArray()
+
+fun toDate(str: String): Date {
+    val dateList = str.split(".").map { it.toInt() }
+    return Date(dateList[0], dateList[1], dateList[2])
+}
+
+
+class Date(private var year: Int, private var month: Int, private var day: Int) {
+    override fun toString(): String = "%04d.%02d.%02d".format(year, month, day)
+
+    fun isBig(date: Date): Boolean {
+        return this.toString() >= date.toString()
     }
 
-    private fun String.toDate(): Date {
-        val tmp = this.split(".").map { it.toInt() }
-        return Date(tmp[0], tmp[1], tmp[2])
+    fun addDate(date: Date) {
+        this.month += date.month
+        this.year += date.year
+        this.day += date.day
+
+        if (this.month > 12) {
+            this.year += this.month / 12
+            this.month %= 12
+        }
     }
+
 }
