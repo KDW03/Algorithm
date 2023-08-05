@@ -1,17 +1,13 @@
-data class Info(val reportArray: ArrayList<String> = arrayListOf(), var reportCount: Int = 0)
-
 class Solution {
-    fun solution(id_list: Array<String>, report: Array<String>, k: Int): IntArray {
-
-        val totalmap = id_list.associateWith { Info() }
-        report.toSet().map { it.split(" ") }.forEach { list ->
-            val p = list[0]
-            (1 until list.size).forEach { index ->
-                totalmap[list[index]]!!.reportCount++
-                totalmap[p]!!.reportArray.add(list[index])
-            }
-        }
-        
-        return totalmap.map{ it.value.reportArray.count{ p -> totalmap[p]!!.reportCount >= k } }.toIntArray()
-    }
+    fun solution(id_list: Array<String>, report: Array<String>, k: Int): IntArray =
+    report.map { it.split(" ") }
+        .groupBy { it[1] }
+        .asSequence()
+        .map { it.value.distinct() }
+        .filter { it.size >= k }
+        .flatten()
+        .map { it[0] }
+        .groupingBy { it }
+        .eachCount()
+        .run { id_list.map { getOrDefault(it, 0) }.toIntArray() }
 }
