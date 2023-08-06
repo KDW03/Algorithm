@@ -1,31 +1,29 @@
-import java.util.*
-
 class Solution {
     fun solution(survey: Array<String>, choices: IntArray): String {
-        var answer: String = ""
-        val map: HashMap<Char, Int> = hashMapOf()
-        val str = "RTCFJMAN"
-        for (i in str) {
-            map[i] = 0
-        }
-        for ((i, s) in survey.withIndex()) {
-            val score = choices[i]
-            if (score == 4) continue
+        survey.forEachIndexed { index, s ->
+            var score = 0
+            var typeClass = Type.RT
+
+            if (s[0] > s[1]) {
+                typeClass = Type.valueOf(s.reversed())
+                score = 8 - choices[index]
+            } else {
+                typeClass = Type.valueOf(s)
+                score = choices[index]
+            }
+
             if (score <= 3) {
-                map[s[0]] = map[s[0]]!! + (4 - score)
-            } else {
-                map[s[1]] = map[s[1]]!! + (score - 4)
+                typeClass.firstScore += (4 - score)
+            } else if (score >= 5) {
+                typeClass.secondScore += (score - 4)
             }
         }
-        for (i in str.indices step 2) {
-            val first = str[i]
-            val second = str[i + 1]
-            answer += if (map[first]!! >= map[second]!!) {
-                first
-            } else {
-                second
-            }
-        }
-        return answer
+        return Type.values().map { if (it.firstScore >= it.secondScore) it.name[0] else it.name[1] }.joinToString("")
     }
 }
+
+
+enum class Type(var firstScore: Int = 0, var secondScore: Int = 0) {
+    RT, CF, JM, AN
+}
+
