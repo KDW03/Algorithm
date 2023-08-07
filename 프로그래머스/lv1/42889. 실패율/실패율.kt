@@ -1,22 +1,22 @@
 class Solution {
-    fun solution(N: Int, stages: IntArray): IntArray = IntArray(N).mapIndexed { i,v ->
-        val stage = i + 1
-
-        var challengeUser = 0f
-        var stayUser = 0f
-
-        stages.forEach { userStayStage ->
-            if(userStayStage >= stage) challengeUser++
-            if(userStayStage == stage) stayUser++
+    fun solution(N: Int, stages: IntArray): IntArray {
+        val challengeUser = IntArray(N + 2)
+        val stayUser = IntArray(N + 2)
+        
+        for (stage in stages) {
+            stayUser[stage]++
         }
-        var failRate = 0f
-        if(challengeUser != 0f) failRate = stayUser/challengeUser
-        Pair(stage,failRate)
-    }.sortedBy{
-        it.first
-    }.sortedByDescending {
-        it.second
-    }.map{
-        it.first
-    }.toIntArray()
+        
+        challengeUser[N + 1] = stayUser[N + 1]
+        for (i in N downTo 1) {
+            challengeUser[i] = challengeUser[i + 1] + stayUser[i]
+        }
+        
+        return (1..N).map { stage ->
+            val failRate = if (challengeUser[stage] == 0) 0.0 else stayUser[stage].toDouble() / challengeUser[stage]
+            Pair(stage, failRate)
+        }.sortedWith(compareByDescending<Pair<Int, Double>> { it.second }.thenBy { it.first })
+         .map { it.first }
+         .toIntArray()
+    }
 }
