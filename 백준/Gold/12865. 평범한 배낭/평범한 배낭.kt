@@ -1,30 +1,23 @@
-data class Duct(val weight: Int, val value: Int)
+import kotlin.math.max
 
 fun main() {
     val br = System.`in`.bufferedReader()
-    // n 물품의 수 , k 버틸수 있는 무게 최대한 많은 v
-    val (N, K) = br.readLine().split(" ").map { it.toInt() }
-    val set: MutableList<Duct> = mutableListOf()
-    val dpTable = Array<ArrayList<Duct>>(K + 1) { arrayListOf() }
+    val (n, k) = br.readLine().split(" ").map { it.toInt() }
+    val dp: Array<IntArray> = Array(n + 1) { IntArray(k + 1) }
 
-    repeat(N) {
-        val (W, V) = br.readLine().split(" ").map { it.toInt() }
-        set.add(Duct(W, V))
-    }
+    for (i in 1 .. n){
+        val (w,v) = br.readLine().split(" ").map { it.toInt() }
 
-    for (currentWeight in dpTable.indices) {
-        for (duct in set) {
-            val preIndex = currentWeight - duct.weight
-            if (preIndex >= 0) {
-                // 이전 꺼
-                if (dpTable[preIndex].sumOf { it.value } + duct.value > dpTable[currentWeight].sumOf { it.value } && !dpTable[preIndex].contains(duct) ) {
-                    dpTable[currentWeight] = dpTable[preIndex].toTypedArray().copyOf().toMutableList().apply { add(duct) } as ArrayList<Duct>
-                }
+        for (j in 1 .. k) {
+            // 만약 현재 상품의 크기가 현재 담을 수 있는것보다 크다면
+            dp[i][j] = if (j < w) {
+                dp[i - 1][j]
+            }else{
+                // 이전 상품까지 고려했을 때가 더 큰지 현재 상품 까지 고려했을 때가 더 큰지
+                max(dp[i - 1][j], dp[i - 1][j - w] + v)
             }
-
         }
-
     }
 
-    println(dpTable.maxOf { it.sumOf { it.value } })
+    println(dp[n][k])
 }
