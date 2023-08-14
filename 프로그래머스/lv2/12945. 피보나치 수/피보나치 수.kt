@@ -1,13 +1,13 @@
 class Solution {
     fun solution(n: Int): Int {
-        val table : IntArray = IntArray(100001){-1}
-        table[0] = 0
-        table[1] = 1
-        return f(n,table).toInt() 
-    }
-    
-    fun f(n : Int,table : IntArray) : Int {
-        if(table[n] == -1) table[n] = (f(n-1,table) + f(n-2,table)) % 1234567
-        return table[n]
+        var prevprev = 0
+        var prev = 1
+        var answer = 0
+        for(i in 2 .. n) {
+            answer = (prevprev + prev) % 1234567
+            prevprev = prev
+            prev = answer
+        }
+        return answer
     }
 }
