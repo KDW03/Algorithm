@@ -1,14 +1,12 @@
 class Solution {
     fun solution(brown: Int, yellow: Int): IntArray {
-        val sum = brown + yellow
-        val tmp = brown/2
-        var row = (tmp / 2) + (tmp % 2)
-        var column = tmp / 2
-        while(true){
-            if((row+1) * (column+1) == sum) break
-            row++
-            column--
+        var sum = (brown + 4) / 2 
+        var multiple = brown + yellow 
+        for(i in 1 until sum / 2 + 1) {
+            val col = i
+            val row = sum - i
+            if(col * row == multiple) return intArrayOf(row,col)
         }
-        return intArrayOf(row+1,column+1)
+        return intArrayOf(0,0)        
     }
 }
