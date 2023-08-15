@@ -1,60 +1,60 @@
+import java.util.*
 
 class Solution {
     fun solution(relation: Array<Array<String>>): Int {
-        val cols = relation[0].size
-        val rows = relation.size
-        val candidates = mutableListOf<Set<Int>>()
+        //1 모든 키 조합을 구하자 현재 자기 자신 포함
+        val keys: MutableList<Set<Int>> = mutableListOf()
+        val size = relation[0].size
+        val rowSize = relation.size
+        keys.addAll(combinationKey(size))
 
-        // 모든 키 조합을 만듬
-        for (i in 1..cols) candidates.addAll(generateCombination(cols, i))
+        val answer: MutableList<Set<Int>> = mutableListOf()
 
-        val answer = mutableListOf<Set<Int>>()
-
-        // 키 후보를 하나씩 꺼내서
-        for (keys in candidates) {
-            val uniqueCheck = mutableSetOf<String>()
-
-            // 그 row를 하나씩 보면서
-            for (r in 0 until rows) {
-                // 각 키의 값을 합친게 유일한지
-                val keyString = keys.joinToString(",") { relation[r][it] }
-                uniqueCheck.add(keyString)
-            }
-
-            // 유일성이 검증됐다면
-            if (uniqueCheck.size == rows) {
-                // 최소성 검사
-                var isMinimal = true
-
-                // 정답을 보면서
-                for (ans in answer) {
-                    // 현재 유일성 중에 이전에 나온게 있다면 최소성 x
-                    if (keys.containsAll(ans)) {
-                        isMinimal = false
-                        break
-                    }
-                }
-                // 만약 이게 최소성 또한 만족이 되었다면
-                if (isMinimal) answer.add(keys)
+        for (key in keys) {
+            if (isUnique(relation, key, rowSize) && isMinimum(answer, key)) {
+                answer.add(key)
             }
         }
+
         return answer.size
     }
+}
 
-    private fun generateCombination(n: Int, r: Int): List<Set<Int>> {
-        val results = mutableListOf<Set<Int>>()
-        fun combination(arr: List<Int>, depth: Int, idx: Int, current: Set<Int>) {
-            if (depth == r) {
-                results.add(current.toSet())
-                return
-            }
-
-            if (idx == n) return
-
-            combination(arr, depth + 1, idx + 1, current + arr[idx])
-            combination(arr, depth, idx + 1, current)
+// 키 조합이 최소성을 만족하는지
+// 이전 정답 리스트에 이걸 포함하는게 있는지
+fun isMinimum(answer: List<Set<Int>>, key: Set<Int>): Boolean {
+    for (ans in answer) {
+        if (key.containsAll(ans)) {
+            return false
         }
-        combination((0 until n).toList(), 0, 0, setOf())
-        return results
     }
+    return true
+}
+
+// 해당 키 조합이 유일한지
+fun isUnique(relation: Array<Array<String>>, key: Set<Int>, rowSize: Int): Boolean {
+    val set = mutableSetOf<String>()
+    for (row in 0 until rowSize) set.add(key.joinToString { relation[row][it] })
+    return rowSize == set.size
+}
+
+
+fun combinationKey(size: Int): List<Set<Int>> {
+    //
+    val result: MutableList<Set<Int>> = mutableListOf()
+    val list = (0 until size).toList()
+    fun combination(k: Int, idx: Int = 0, set: Set<Int> = setOf()) {
+        if (k == set.size) {
+            result.add(set)
+            return
+        }
+        // 만약 현재 뽑을 인덱스가 전체 리스트 보다 크다면
+        if (idx == size) return
+
+        combination(k, idx + 1, set + list[idx])
+        combination(k, idx + 1, set)
+    }
+    // 2개 부터
+    for (i in 1..size) combination(i)
+    return result
 }
