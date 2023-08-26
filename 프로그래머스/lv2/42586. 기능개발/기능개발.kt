@@ -1,25 +1,25 @@
 class Solution {
     fun solution(progresses: IntArray, speeds: IntArray): IntArray {
-        val answer = ArrayList<Int>()
-        val requireDay = progresses.mapIndexed { index, i ->
-            val remain = 100 - i
-            val speed = speeds[index]
-            var day = if (remain % speed != 0) 1 else 0
-            day += (remain / speed)
-            day
+        val map = progresses.mapIndexed { i , v -> 
+            val remain = 100 - v 
+            remain / speeds[i] + if(remain % speeds[i] == 0) 0 else 1
         }
-        var max = requireDay[0]
-        var workCount = 0
-        requireDay.forEach {
-            if (it > max){
-                max = it
-                answer.add(workCount)
-                workCount = 1
-            }else{
-                workCount++
+        
+        val answer = mutableListOf<Int>()
+        var count = 1
+        var pre = map[0]
+        for(now in map.drop(1)){
+            if(now <= pre) count++
+            else {
+                answer.add(count)
+                pre = now
+                count = 1
             }
         }
-        answer.add(workCount)
+        
+        answer.add(count)
+        
+        
         return answer.toIntArray()
     }
 }
