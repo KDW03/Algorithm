@@ -1,37 +1,22 @@
 class Solution {
     fun solution(want: Array<String>, number: IntArray, discount: Array<String>): Int {
-        var start = 0
-        var end = 9
+        var answer: Int = 0
+        val wantMap = mutableMapOf<String, Int>()
 
-        val countMap: HashMap<String, Int> = hashMapOf()
-
-        for (i in want.indices) {
-            countMap[want[i]] = number[i]
-        }
-
-        var answer = 0
-
-        outer@ while (end < discount.size) {
-            val haveMap: Map<String, Int> = discount.slice(start..end).toList().groupingBy { it }.eachCount()
-            for ((k, v) in countMap) {
-                if (haveMap[k] == null || haveMap[k]!! < v) {
-                    end = discount.indexOfFrom(end + 1, k)
-                    if (end == Int.MAX_VALUE) break@outer
-                    start = end - 9
-                    continue@outer
-                }
+        repeat(discount.size) {
+            wantMap.clear()
+            repeat(want.size) { wantMap[want[it]] = number[it] }
+            var num = 0
+            for(i in it until discount.size) {
+                val food = discount[i]
+                if(!wantMap.containsKey(food)) break
+                if(wantMap[food] == 0) break
+                wantMap[food] = wantMap[food]!! - 1
+                num ++
             }
-            end = discount.indexOfFrom(end + 1, discount[start])
-            start = end - 9
-            answer++
+            if (num == 10) answer ++
         }
-        return answer
-    }
 
-    private fun <T> Array<T>.indexOfFrom(start: Int, element: T): Int {
-        for (i in start until this.size) {
-            if (this[i] == element) return i
-        }
-        return Int.MAX_VALUE
+        return answer
     }
 }
