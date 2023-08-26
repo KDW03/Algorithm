@@ -1,22 +1,26 @@
-import java.util.*
+import java.util.Deque
+import java.util.LinkedList
 
+data class Process(val idx : Int, val priority : Int)
 class Solution {
     fun solution(priorities: IntArray, location: Int): Int {
-        val t = priorities.mapIndexed { index, i ->
-            Pair(index, i)
+        var count = 0
+
+        val processes = priorities.mapIndexed { i,v ->
+            Process(i,v)
         }
-        val find = t[location]
-        val q : Queue<Pair<Int,Int>> = LinkedList(t)
-        val pq = priorities.sortedDescending()
-        var answer = 0
-        while (true) {
-            val tmp = q.poll()
-            if (tmp.second == pq[answer]){
-                if (tmp == find) return answer + 1 
-                answer++
+
+        val deque : Deque<Process> = LinkedList(processes)
+        while (deque.isNotEmpty()){
+            val p = deque.pollFirst()
+            if (deque.isEmpty() || deque.maxOf { it.priority } <= p.priority){
+                count++
+                if (p.idx == location) break
             }else{
-                q.add(tmp)
+                deque.addLast(p)
             }
         }
+
+        return count
     }
 }
