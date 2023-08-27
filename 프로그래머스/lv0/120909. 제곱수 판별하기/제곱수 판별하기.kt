@@ -1,5 +1,9 @@
 import kotlin.math.*
 
 class Solution {
-    fun solution(n: Int): Int = if (n.toDouble().pow(0.5).toInt().toDouble().pow(2).toInt() == n) 1 else 2
+    fun solution(n: Int): Int {
+        val root = sqrt(n.toDouble())
+        // 
+        return if (root.toInt().toDouble() == root) 1 else 2
+    }
 }
