@@ -1,47 +1,45 @@
-import java.util.LinkedList
-import java.util.Queue
+import java.io.BufferedReader
+import java.io.InputStreamReader
+
+val dx = arrayOf(-1, 1, 0, 0)
+val dy = arrayOf(0, 0, -1, 1)
+
+fun dfs(x: Int, y: Int, field: Array<Array<Int>>) {
+    field[x][y] = 0 // 방문 표시
+
+    for (i in 0 until 4) {
+        val nx = x + dx[i]
+        val ny = y + dy[i]
+
+        if (nx in 0 until field.size && ny in 0 until field[0].size && field[nx][ny] == 1) {
+            dfs(nx, ny, field)
+        }
+    }
+}
 
 fun main() {
-    val br = System.`in`.bufferedReader()
+    val br = BufferedReader(InputStreamReader(System.`in`))
     val t = br.readLine().toInt()
+
     repeat(t) {
         val (m, n, k) = br.readLine().split(" ").map { it.toInt() }
-        val board = Array(m) { BooleanArray(n) }
-        val visited = Array(m) { BooleanArray(n) }
+        val field = Array(m) { Array(n) { 0 } }
+
         repeat(k) {
             val (x, y) = br.readLine().split(" ").map { it.toInt() }
-            board[x][y] = true
+            field[x][y] = 1
         }
-        val dx = arrayOf(0, 0, 1, -1)
-        val dy = arrayOf(1, -1, 0, 0)
+
         var count = 0
-        for (x in 0 until m) {
-            for (y in 0 until n) {
-                if (!visited[x][y] && board[x][y]) {
-                    bfs(x, y, board, visited, m, n, dx, dy)
+        for (i in 0 until m) {
+            for (j in 0 until n) {
+                if (field[i][j] == 1) {
+                    dfs(i, j, field)
                     count++
                 }
             }
         }
+
         println(count)
     }
 }
-
-fun bfs(x: Int, y: Int, board: Array<BooleanArray>, visited: Array<BooleanArray>, m: Int, n: Int, dx: Array<Int>, dy: Array<Int>) {
-    val q: Queue<Pair<Int, Int>> = LinkedList()
-    q.add(Pair(x, y))
-    visited[x][y] = true
-    while (q.isNotEmpty()) {
-        val (cx, cy) = q.poll()
-        for (i in 0..3) {
-            val nx = cx + dx[i]
-            val ny = cy + dy[i]
-            if (nx in 0 until m && ny in 0 until n && !visited[nx][ny] && board[nx][ny]) {
-                q.add(Pair(nx, ny))
-                visited[nx][ny] = true
-            }
-        }
-    }
-}
-
-
