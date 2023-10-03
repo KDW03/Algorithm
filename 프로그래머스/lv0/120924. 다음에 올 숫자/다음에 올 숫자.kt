@@ -1,14 +1,16 @@
 class Solution {
     fun solution(common: IntArray): Int {
-        val one = common[0]
-        val two = common[1]
-        val arithmetic = two - one
+        var answer: Int = 0
+        
+        // 등차 인지 등비인지 판별
+        val first = common[0]
+        val second = common[1]
+        val third = common[2]
         val last = common.last()
-        val isArithmetic = (common.last() - arithmetic == common[common.size - 2])
-        return if (isArithmetic) {
-            last + arithmetic
-        } else {
-            last * two / one
-        }
+        
+        val ab = second - first
+        val mu = if(first != 0) second / first else 1
+        
+        return if(third - second == ab) last + ab else last *  mu 
     }
 }
