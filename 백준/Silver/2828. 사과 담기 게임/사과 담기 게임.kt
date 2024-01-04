@@ -1,23 +1,29 @@
+import kotlin.math.abs
+
 fun main() {
     val br = System.`in`.bufferedReader()
-    val (n, m) = br.readLine().split(" ").map { it.toInt() }
-    var locationArr = mutableListOf<Int>()
-    repeat(br.readLine().toInt()) {
-        locationArr.add(br.readLine().toInt())
-    }
 
-    var range = (1 .. m)
-    var move = 0
-    for (location in locationArr) {
-        if (location !in range) {
-            range = if (range.first < location) {
-                move += location - range.last
-                (location - m + 1..location)
-            } else {
-                move += range.first - location
-                (location until location + m)
-            }
+    val (N,M) = br.readLine().split(" ").map { it.toInt() }
+    val j = br.readLine().toInt()
+
+    var left = 1
+    var right = M
+    var answer = 0
+    repeat(j) {
+
+        val apple = br.readLine().toInt()
+
+        if (apple < left) {
+            answer += abs(left - apple)
+            left = apple
+            right = left + M - 1
+        }
+        if (apple > right) {
+            answer += abs(right - apple)
+            right = apple
+            left = right - M + 1
         }
     }
-    println(move)
+
+    println(answer)
 }
