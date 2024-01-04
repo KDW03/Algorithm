@@ -1,20 +1,17 @@
 fun main() {
-    val br = System.`in`.bufferedReader()
-    val n = br.readLine().toInt()
+    val n = readLine()!!.toInt() // 도시의 개수
+    val distances = readLine()!!.split(" ").map { it.toLong() } // 각 도시간 거리
+    val prices = readLine()!!.split(" ").map { it.toLong() } // 각 도시의 기름 가격
 
-    val o = br.readLine().split(" ").map { it.toInt() }
-    val p = br.readLine().split(" ").map { it.toInt() }
-    
-    var totalPrice = 0
-    var nowP = p[0]
-    var move = o[0]
-    for (i in 1 until n - 1) {
-        if (nowP > p[i]) {
-            totalPrice += move * nowP
-            nowP = p[i]
-            move = 0
+    var totalCost = 0L
+    var minPrice = prices[0]
+
+    for (i in 0 until n - 1) {
+        if (prices[i] < minPrice) {
+            minPrice = prices[i]
         }
-        move += o[i]
+        totalCost += minPrice * distances[i]
     }
-    println(totalPrice + (move * nowP))
+
+    println(totalCost)
 }
