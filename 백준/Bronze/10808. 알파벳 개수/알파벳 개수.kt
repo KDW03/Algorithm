@@ -1,7 +1,10 @@
 fun main() {
     val br = System.`in`.bufferedReader()
-    (br.readLine() + ('a'..'z').joinToString("")).groupingBy { it }.eachCount()
-        .toSortedMap().values.map { it - 1 }.joinToString(" ").let {
-        println(it)
+    val arr = IntArray('z' - 'a' + 1)
+
+    br.readLine().forEach {
+        arr[it - 'a']++
     }
+
+    println(arr.joinToString(" "))
 }
