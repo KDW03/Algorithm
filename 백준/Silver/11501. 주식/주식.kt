@@ -4,14 +4,19 @@ fun main() {
 
     repeat(t) {
         val n = br.readLine().toInt()
-        var nums = br.readLine().split(" ").map { it.toLong() }
-        var ans = 0L
-        while (nums.size > 1) {
-            val max = nums.max()
-            val maxIndex = nums.lastIndexOf(max)
-            ans += maxIndex * max - nums.slice(0 until maxIndex).sum()
-            nums = nums.drop(maxIndex + 1)
+        val prices = br.readLine().split(" ").map { it.toLong() }
+
+        var maxPrice = 0L
+        var profit = 0L
+
+        for (i in n - 1 downTo 0) {
+            if (prices[i] > maxPrice) {
+                maxPrice = prices[i]
+            } else {
+                profit += maxPrice - prices[i]
+            }
         }
-        println(ans)
+
+        println(profit)
     }
 }
