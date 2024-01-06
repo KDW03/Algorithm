@@ -1,27 +1,22 @@
-lateinit var visited: Array<BooleanArray>
-lateinit var answerList: ArrayList<Int>
-var n = 0
-
 fun main() {
     val br = System.`in`.bufferedReader()
-    n = br.readLine().toInt()
-    visited = Array(n) { BooleanArray(n) }
-    answerList = arrayListOf()
-    repeat(n) {
-        val input = br.readLine()
-        for (i in input.indices) {
-            visited[it][i] = input[i] != '1'
-        }
-    }
-    for (x in 0 until n) {
-        for (y in 0 until n) {
-            if (!visited[x][y]) {
-                answerList.add(dfs(x, y))
+    val n = br.readLine().toInt()
+
+    val arrs = Array(n) { br.readLine().map { it.digitToInt() }.toIntArray() }
+    val visited = Array(n) { BooleanArray(n) }
+    val total = ArrayList<Int>()
+
+    for (x in arrs.indices) {
+        for (y in arrs[x].indices) {
+            if (arrs[x][y] == 1 && !visited[x][y]) {
+                val count: Int = dfs(x, y, arrs, visited)
+                total.add(count)
             }
         }
     }
-    println(answerList.size)
-    answerList.sorted().forEach {
+
+    println(total.size)
+    total.sorted().forEach {
         println(it)
     }
 }
@@ -29,19 +24,19 @@ fun main() {
 val moveX = arrayOf(1, -1, 0, 0)
 val moveY = arrayOf(0, 0, 1, -1)
 
-fun dfs(x: Int, y: Int): Int {
-    var count = 1
+
+fun dfs(x: Int, y: Int, arrs: Array<IntArray>, visited: Array<BooleanArray>): Int {
+    var ans = 1
     visited[x][y] = true
+
     for (i in 0 until 4) {
-        val newX = x + moveX[i]
-        val newY = y + moveY[i]
-        if (canMove(newX, newY) && !visited[newX][newY]) {
-            count += dfs(newX, newY)
+        val nx = x + moveX[i]
+        val ny = y + moveY[i]
+
+        if (nx in visited.indices && ny in visited[0].indices && !visited[nx][ny] && arrs[nx][ny] == 1) {
+            ans += dfs(nx,ny,arrs, visited)
         }
     }
-    return count
-}
 
-fun canMove(x: Int, y: Int): Boolean {
-    return x in 0 until n && y in 0 until n
+    return ans
 }
