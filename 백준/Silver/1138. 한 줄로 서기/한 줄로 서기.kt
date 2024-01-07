@@ -1,20 +1,15 @@
+import java.util.*
+import kotlin.collections.ArrayList
+
 fun main() {
     val br = System.`in`.bufferedReader()
     val N = br.readLine().toInt()
-    val leftCount = br.readLine().split(" ").map { it.toInt() }
-    val line = IntArray(N)
+    val leftCounts = br.readLine().split(" ").map { it.toInt() }
+    val lineup = ArrayList<Int>(Collections.nCopies(N, 0))
 
-    for (i in 1..N) {
-        var count = leftCount[i - 1]
-        for (j in 0 until N) {
-            if (count == 0 && line[j] == 0) {
-                line[j] = i
-                break
-            } else if (line[j] == 0) {
-                count--
-            }
-        }
+    for (i in N - 1 downTo 0) {
+        lineup.add(leftCounts[i], i + 1)
     }
 
-    println(line.joinToString(" "))
+    println(lineup.take(N).joinToString(" "))
 }
