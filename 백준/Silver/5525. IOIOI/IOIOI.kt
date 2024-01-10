@@ -4,18 +4,22 @@ fun main() {
     val m = br.readLine().toInt()
     val s = br.readLine()
 
-    var pn = ""
-    for (i in 0 until n) {
-        pn += "IO"
-    }
-    pn += "I"
     var count = 0
-    for (i in s.indices) {
-        if (s[i] == 'I') {
-            val str = s.substring(i until minOf(i + pn.length, s.length))
-            if (str == pn) count++
-        }
-    }
+    var i = 1 
+    var patternCount = 0 
 
+    while (i < m - 1) {
+        if (s[i - 1] == 'I' && s[i] == 'O' && s[i + 1] == 'I') {
+            patternCount++
+            if (patternCount == n) {
+                count++
+                patternCount-- 
+            }
+            i++ 
+        } else {
+            patternCount = 0 
+        }
+        i++ 
+    }
     println(count)
 }
