@@ -6,7 +6,6 @@ fun main() {
     val start = Pair(br.readLine().toInt(), 0)
     val graph: Array<ArrayList<Pair<Int, Int>>> = Array(V + 1) { ArrayList() }
     val ans = IntArray(V + 1) { Int.MAX_VALUE }
-    val visited = BooleanArray(V + 1)
     repeat(E) {
         val (a, b, c) = br.readLine().split(" ").map { it.toInt() }
         graph[a].add(Pair(b, c))
@@ -18,11 +17,10 @@ fun main() {
 
     while (pq.isNotEmpty()) {
         val (node, dist) = pq.poll()
-        visited[node] = true
 
         for ((nNum, nDist) in graph[node]) {
             val newDist = dist + nDist
-            if (ans[nNum] > newDist && !visited[nNum]) {
+            if (ans[nNum] > newDist ) {
                 ans[nNum] = newDist
                 pq.add(Pair(nNum, newDist))
             }
