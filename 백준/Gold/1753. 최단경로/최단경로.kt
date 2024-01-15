@@ -27,11 +27,14 @@ fun main() {
         }
     }
 
+    val sb = StringBuilder()
     ans.drop(1).forEach {
         if (it == Int.MAX_VALUE) {
-            println("INF")
+            sb.append("INF").append("\n")
         } else {
-            println(it)
+            sb.append(it).append("\n")
         }
     }
+
+    println(sb.toString())
 }
