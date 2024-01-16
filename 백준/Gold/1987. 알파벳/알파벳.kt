@@ -2,16 +2,11 @@ fun main() {
     val br = System.`in`.bufferedReader()
     val (R, C) = br.readLine().split(" ").map { it.toInt() }
     val arr = Array(R) { br.readLine().map { it - 'A' } }
-    val visited = BooleanArray('Z' - 'A' + 1)
-
-    val start = Triple(0, 0, 1)
     var maxMove = 0
-    visited[arr[0][0]] = true
     val moveX = arrayOf(0, 0, -1, 1)
     val moveY = arrayOf(1, -1, 0, 0)
-
-    fun dfs(start: Triple<Int, Int, Int>) {
-        val (x, y, dist) = start
+    
+    fun dfs(x: Int, y: Int, dist: Int, visited: Int) {
         maxMove = maxOf(maxMove, dist)
         for (i in 0 until 4) {
             val nx = x + moveX[i]
@@ -19,15 +14,16 @@ fun main() {
 
             if (nx in 0 until R && ny in 0 until C) {
                 val alphabet = arr[nx][ny]
-                if (!visited[alphabet]) {
-                    visited[alphabet] = true
-                    dfs(Triple(nx, ny, dist + 1))
-                    visited[alphabet] = false
+                val mask = 1 shl alphabet
+
+                if (visited and mask == 0) {
+                    dfs(nx, ny, dist + 1, visited or mask)
                 }
             }
         }
     }
 
-    dfs(start)
+    val visited = 1 shl arr[0][0]
+    dfs(0, 0, 1, visited)
     println(maxMove)
 }
