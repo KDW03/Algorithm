@@ -20,7 +20,7 @@ fun main() {
                 }
             }
         }
-        val s = countValueMap.toList().sortedWith(compareBy({ it.second.second }, { it.second.third }))
+        val s = countValueMap.toList().sortedWith(compareBy<Pair<Int, Triple<Int, Int, Int>>> { it.second.second }.thenBy { it.second.third })
         sb.append(s.first().first).append("\n")
     }
     print(sb.toString())
