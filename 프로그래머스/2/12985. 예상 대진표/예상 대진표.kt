@@ -1,14 +1,10 @@
 class Solution {
     fun solution(n: Int, a: Int, b: Int): Int {
-        var aRank = a
-        var bRank = b
-        var count = 0
-        while(aRank != bRank) {
-            aRank = (aRank + 1) / 2
-            bRank = (bRank + 1) / 2
-            count++
-        }
-                    
-        return count
+        var answer = 0
+ 
+        // [실행] 버튼을 누르면 출력 값을 볼 수 있습니다.
+        println("Hello Kotlin")
+
+        return answer
     }
 }
