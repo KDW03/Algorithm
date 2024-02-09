@@ -18,9 +18,14 @@ fun main() {
 
     // height 만큼 cluster 이동
     fun moveCluster(cluster: Cluster, height: Int) {
-        for ((x, y) in cluster.parts.sortedByDescending { it.x }) {
+        // 이동 전에 모든 위치를 '.'으로 변경
+        cluster.parts.forEach { (x, y) ->
             board[x][y] = '.'
-            board[x + height][y] = 'x'
+        }
+
+        // 이동 후에 미네랄 위치 업데이트
+        cluster.parts.forEach { part ->
+            board[part.x + height][part.y] = 'x'
         }
     }
 
@@ -120,5 +125,3 @@ fun main() {
     }
     print(sb.toString().trimEnd())
 }
-
-
