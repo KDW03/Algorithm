@@ -19,9 +19,9 @@ class Solution {
                 if (isUnique(now)) answerArr.add(now)
                 return
             }
-
             if (i !in cols.indices) return
-            (now + cols[i])
+            
+            // 정답배열에 있는 조합과 완전히 겹치는 조합이 아닌것들만 새로운 조합으로 만든다.
             if (answerArr.all { (it.toSet() - (now + cols[i]).toSet()).size >= 1 } ) makeCombi(k, i + 1, now + cols[i])
             makeCombi(k, i + 1, now)
         }
