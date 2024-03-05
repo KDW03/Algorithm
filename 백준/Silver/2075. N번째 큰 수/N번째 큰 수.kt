@@ -1,10 +1,16 @@
+import java.util.PriorityQueue
+
 fun main() {
     val br = System.`in`.bufferedReader()
     val n = br.readLine().toInt()
-    val arr = arrayListOf<Int>()
+    val pq: PriorityQueue<Int> = PriorityQueue()
+
     repeat(n) {
-        arr.addAll(br.readLine().split(" ").map { it.toInt() })
+        pq.addAll(br.readLine().split(" ").map { it.toInt() })
+        while (pq.size > n) {
+            pq.poll()
+        }
     }
 
-    println(arr.sortedDescending()[n - 1])
+    println(pq.poll())
 }
