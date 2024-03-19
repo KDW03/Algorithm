@@ -1,63 +1,58 @@
+import java.util.Stack
 import kotlin.math.abs
 
-// 왼쪽 또는 오른쪽 중 큰거 개수 및 그것의 인덱스
-data class D(val count: Int = 0, val index: Int = -1)
-data class Building(val LD: D, val RD: D, val idx: Int, val height: Int)
+data class Building(val idx: Int, val height: Int)
 
 fun main() {
+    // 예제 입력
     val br = System.`in`.bufferedReader()
-
     val n = br.readLine().toInt()
-    val heights = br.readLine().split(" ").mapIndexed { i, v -> Pair(i, v.toInt()) }.sortedByDescending {
-        it.second
+    val buildings = br.readLine().split(" ").mapIndexed { i, h ->
+        Building(i + 1, h.toInt())
     }
 
-    val answers = arrayListOf<Building>()
+    val stack = Stack<Building>()
+    val answer = Array(n) { Pair(0, 0) }
 
-    for (h in heights) {
-        val insertIdx = -answers.binarySearch {
-            it.idx.compareTo(h.first)
-        } - 1
 
-        var li = insertIdx - 1
-        var ri = insertIdx
+    for ((i, h) in buildings) {
 
-        while (li >= 0 && answers[li].height <= h.second) {
-            li--
+        while (!stack.isEmpty() && stack.peek().height <= h) {
+            stack.pop()
         }
 
-        while (ri < answers.size && answers[ri].height <= h.second) {
-            ri++
+        val c = stack.size
+        if (c != 0) answer[i - 1] = Pair(c, stack.peek().idx)
+        stack.push(Building(i, h))
+    }
+    
+    stack.clear()
+
+    for ((i, h) in buildings.reversed()) {
+
+        while (!stack.isEmpty() && stack.peek().height <= h) {
+            stack.pop()
         }
 
-        val ld = if (li >= 0) answers[li].let {
-            D(it.LD.count + 1, it.idx)
-        } else D()
+        val c = stack.size
 
-        val rd = if (ri < answers.size) answers[ri].let {
-            D(it.RD.count + 1, it.idx)
-        } else D()
+        if (c != 0) {
+            val (count, near) = answer[i - 1]
+            val a = if (near == 0) Int.MAX_VALUE else abs(i - near)
+            val b = abs(i - stack.peek().idx)
+            val totalNear = if (a <= b) near else stack.peek().idx
+            answer[i - 1] = Pair(count + c, totalNear)
+        }
 
-        answers.add(insertIdx, Building(ld, rd, h.first, h.second))
+        stack.push(Building(i, h))
     }
 
-    val sb = StringBuilder()
-    answers.forEach {
-        val ld = it.LD
-        val rd = it.RD
-
-        val tmp = arrayOf(ld, rd).filter { d -> d.count > 0 }.minByOrNull { fd ->
-            abs(fd.index - it.idx)
-        }
-
-        if (tmp == null) {
-            sb.append(0).append("\n")
-        } else {
-            sb.append("${ld.count + rd.count} ${tmp.index + 1}").append("\n")
-        }
-
+    val sb = java.lang.StringBuilder()
+    answer.forEach {
+        if (it.first == 0) sb.append(0)
+        else sb.append("${it.first} ${it.second}")
+        sb.append("\n")
     }
 
     println(sb.toString().trimEnd())
-
 }
