@@ -1,36 +1,33 @@
 class Solution {
     fun solution(s: String): Int {
-        var maxPalindromeLength = 1
-
-        for (center in 1 until s.length - 1) {
-            var palindromeLength = 1
-            var left = center - 1
-            var right = center + 1
-            while (left >= 0 && right <= s.lastIndex && s[left] == s[right]) {
-                palindromeLength += 2
-                left--
-                right++
-            }
-            maxPalindromeLength = maxOf(maxPalindromeLength, palindromeLength)
+        val n = s.length
+        val dp = Array(n) {  BooleanArray(n) }
+        
+        var answer = 1
+        
+        for(i in 0 until n) {
+            dp[i][i] = true
         }
         
-        for (left in 0 until s.length - 1) {
-            if (s[left] != s[left + 1]) continue
-
-            var palindromeLength = 2
-            var right = left + 1
-            var outerLeft = left - 1
-            var outerRight = right + 1
-
-            while (outerLeft >= 0 && outerRight <= s.lastIndex && s[outerLeft] == s[outerRight]) {
-                palindromeLength += 2
-                outerLeft--
-                outerRight++
+        for(i in 0 until n - 1) {
+            if(s[i] == s[i + 1]) {
+                dp[i][i+1] = true
+                answer = 2
             }
-
-            maxPalindromeLength = maxOf(maxPalindromeLength, palindromeLength)
         }
+        
 
-        return maxPalindromeLength
+        for(len in 3 .. n) {
+            for(start in 0 .. n - len) {
+                val end = start + len - 1
+                if(s[start] == s[end] && dp[start + 1][end - 1]) {
+                    answer = len
+                    dp[start][end] = true
+                }
+            }
+        }
+        
+        
+        return answer
     }
 }
