@@ -1,39 +1,42 @@
 import java.util.*
 
-// 분으로 
-data class Time(val inTime : Int, val outTime : Int)
+data class BookTime(val startMinute: Int, val endMinute : Int) 
+
+fun timeToMinute(time : String) : Int {
+    val tmp = time.split(":").map{ it.toInt() }
+    return tmp[0] * 60 + tmp[1]
+}
 
 class Solution {
     fun solution(book_time: Array<Array<String>>): Int {
+        var answer: Int = 0
         
-        // inTime outTime으로 mapping하고 inTime기준으로 오름차순 정렬
-        val sortedTimes = book_time.map {
-            val inTime = timeToMinute(it[0])
-            val outTime = timeToMinute(it[1]) + 10
-            Time(inTime,outTime)
-        }.sortedBy {
-            it.inTime
+        val bookTimes = book_time.map { 
+            BookTime(timeToMinute(it[0]),timeToMinute(it[1]) + 10)
         }
         
-        // 퇴실시간 기준으로 가장 빠른거
-        val pq : PriorityQueue<Int> = PriorityQueue()
-        sortedTimes.forEach {
-            // 사용중이 방이 있고, 그 방의 퇴실시간이 입실시간보다 작거나 같다면 그 방 이용
-            if(pq.isNotEmpty() && pq.peek() <= it.inTime) pq.poll()            
-            // 입실
-            pq.add(it.outTime)
-      
+        val startQ = PriorityQueue<BookTime> {
+            o1,o2 ->
+            o1.startMinute - o2.startMinute
         }
         
-        // 모든 사람들을 다 받고 
-        return pq.size
+        startQ.addAll(bookTimes)
+        
+        val houseQ = PriorityQueue<BookTime> {
+            o1,o2 ->
+            o1.endMinute - o2.endMinute
+        }
+        
+        while(startQ.isNotEmpty()) {
+            val time = startQ.poll()
+            
+            if(houseQ.isNotEmpty() && houseQ.peek().endMinute <= time.startMinute) {
+                houseQ.poll()
+            }
+            
+            houseQ.add(time)
+        }
+        
+        return houseQ.size
     }
-    
-    fun timeToMinute(time : String) : Int {
-        val tmp = time.split(":").map{ it.toInt() }
-        val hour = tmp[0] * 60
-        val minute = tmp[1]
-        return hour + minute 
-    }
-    
 }
