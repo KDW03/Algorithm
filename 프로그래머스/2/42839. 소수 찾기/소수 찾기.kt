@@ -1,39 +1,36 @@
 class Solution {
     fun solution(numbers: String): Int {
-        val permutations = mutableSetOf<Int>()
-        val prime = BooleanArray(10000000) { true }
-        prime[0] = false
-        prime[1] = false
 
-        for(i in 2 until prime.size) {
+        val isPrime = BooleanArray(10000000) { true }
+        isPrime[0] = false
+        isPrime[1] = false
+        for(i in 2 until isPrime.size) {
             // 소수라면
-            if(prime[i]) {
-                for(j in i * 2 until prime.size step i) {
-                    prime[j] = false
+            if(isPrime[i]) {
+                for(j in i + i until isPrime.size step i) {
+                    isPrime[j] = false
                 }
             }
         }
 
-        val nums = numbers.toCharArray()
+        val answerSet = HashSet<Int>()
+        val numArr = numbers.toCharArray()
+        val visited = BooleanArray(numArr.size)
 
-        fun generatePermutations(combination: String, used: BooleanArray) {
+        fun findCombi(now : String = "") {
+            if(now.isNotEmpty() && isPrime[now.toInt()]) answerSet.add(now.toInt())
 
-            if (combination.isNotEmpty()) {
-                permutations.add(combination.toInt())
-            }
-
-            if (combination.length == numbers.length) return
-
-            for (i in nums.indices) {
-                if (!used[i]) {
-                    used[i] = true
-                    generatePermutations(combination + nums[i], used)
-                    used[i] = false
-                }
+            for(i in 0 until numArr.size) {
+                if(visited[i]) continue
+                visited[i] = true
+                findCombi(now + numArr[i])
+                visited[i] = false
             }
         }
 
-        generatePermutations("", BooleanArray(numbers.length))
-        return permutations.count { prime[it] }
+        findCombi()
+
+
+        return answerSet.size
     }
 }
