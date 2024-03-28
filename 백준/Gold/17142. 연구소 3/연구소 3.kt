@@ -57,12 +57,14 @@ fun main() {
         for (x in 0 until n) {
             for (y in 0 until n) {
                 if (arr[x][y] == 0) {
-                    max = maxOf(max,distMap[x][y])
+                    max = maxOf(max, distMap[x][y])
+                    // max가 이미 min보다 크다면 return
+                    if (max > min) return
                 }
             }
         }
 
-        min = minOf(min,max)
+        min = minOf(min, max)
     }
 
 
