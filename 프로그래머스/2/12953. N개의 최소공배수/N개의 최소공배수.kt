@@ -1,21 +1,20 @@
-import kotlin.math.*
-
-fun gcd(a : Int, b: Int) : Int {
-    if(b == 0) return a
-    return gcd(b,a % b)
-}
-
-
-fun lcm(a : Int,b : Int) : Int {
-    return (a * b) / gcd(a,b)
-}
-
 class Solution {
     fun solution(arr: IntArray): Int {
-        var answer = arr[0]
-        for(i in 1 until arr.size) {
-            answer = lcm(answer, arr[i])
-        }
-        return answer
+        return arr.reduce { lcm, element -> lcm(lcm, element) }
     }
+}
+
+fun gcd(a: Int, b: Int): Int {
+    var x = a
+    var y = b
+    while (y != 0) {
+        val t = y
+        y = x % y
+        x = t
+    }
+    return x
+}
+
+fun lcm(a: Int, b: Int): Int {
+    return a / gcd(a, b) * b
 }
